@@ -1,12 +1,13 @@
 {
-    "name": "@zcorp/shared-hono",
+    "name": "@zcorp/shared-fastify",
     "version": "1.0.0",
+    "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc",
         "lint": "eslint .",
-        "release": "bumpp -r && npm run build && pnpm -r publish",
+        "release": "npm run lint && bumpp package.json --commit --push --tag && npm run build && npm publish",
         "format": "prettier --write ."
     },
     "devDependencies": {
@@ -23,7 +24,8 @@
         "access": "public"
     },
     "dependencies": {
-        "@protobuf-ts/runtime": "^2.9.4",
-        "hono": "^4.6.3"
+        "@zcorp/wheelz-contracts": "latest",
+        "fastify": "^4.28.1",
+        "fastify-plugin":"^4.5.1"
     }
 }

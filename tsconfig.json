@@ -1,9 +1,12 @@
 {
-    "extends": "@zcorp/tsconfig/tsconfig.package.json",
-    "compilerOptions": {
-      "outDir": "./dist",
-      "module": "NodeNext",
-      "moduleResolution": "NodeNext",
-      "rootDir": "src"
-    }
-  }
+  "extends": "@zcorp/tsconfig/tsconfig.package.json",
+  "compilerOptions": {
+    "outDir": "dist"
+  },
+  "include": [
+    "./src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
