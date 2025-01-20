@@ -1,8 +1,8 @@
+import type { UserInformation } from "@zcorp/wheelz-contracts";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 
 import { createAuthClient } from "./auth.client.js";
-
 export interface AuthPluginOptions {
   authServiceUrl: string;
 }
@@ -10,10 +10,10 @@ export interface AuthPluginOptions {
 declare module "fastify" {
   interface FastifyInstance {
     authClient: ReturnType<typeof createAuthClient>;
-    verifyAuth: (request: FastifyRequest) => Promise<number>;
+    verifyAuth: (request: FastifyRequest) => Promise<UserInformation>;
   }
   interface FastifyRequest {
-    userId?: number;
+    user?: UserInformation;
   }
 }
 
@@ -26,14 +26,16 @@ const authPlugin: FastifyPluginAsync<AuthPluginOptions> = async (
   const authClient = createAuthClient({ baseUrl: authServiceUrl });
   fastify.decorate("authClient", authClient);
 
-  const verifyAuth = async (request: FastifyRequest): Promise<number> => {
+  const verifyAuth = async (
+    request: FastifyRequest,
+  ): Promise<UserInformation> => {
     const authHeader = request.headers.authorization;
     if (!authHeader) {
       throw new Error("Token manquant");
     }
 
     try {
-      let userId = undefined;
+      let user: UserInformation | undefined = undefined;
       const bearerToken = authHeader.split(" ")[1];
       if (!bearerToken) {
         throw new Error("Token invalide");
@@ -47,9 +49,9 @@ const authPlugin: FastifyPluginAsync<AuthPluginOptions> = async (
         throw new Error("Token invalide");
       }
 
-      userId = result.body;
+      user = result.body;
 
-      return userId;
+      return user;
     } catch {
       throw new Error("Erreur d'authentification");
     }
