@@ -13,7 +13,24 @@ export const requireAuth = () => {
   };
 };
 
-export const requireRoles = (roles: string[]) => {
+export const requireAnyRoles = (roles: string[]) => {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const user = request.user;
+      if (!user) {
+        throw new Error("Veuillez utiliser requireAuth avant");
+      }
+      if (!roles.some((role) => user.roles.includes(role))) {
+        throw new Error("Vous n'avez pas les droits nécessaires");
+      }
+    } catch (error) {
+      reply.status(403).send({
+        message: error instanceof Error ? error.message : "Non autorisé",
+      });
+    }
+  };
+};
+export const requireAllRoles = (roles: string[]) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const user = request.user;
