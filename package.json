@@ -24,7 +24,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@zcorp/wheelz-contracts": "latest",
+        "@zcorp/wheelz-contracts": "^1.1.27",
         "fastify": "^4.28.1",
         "fastify-plugin":"^4.5.1"
     }

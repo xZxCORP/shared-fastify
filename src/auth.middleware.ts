@@ -47,3 +47,21 @@ export const requireAllRoles = (roles: string[]) => {
     }
   };
 };
+
+export const requireToBePartOfCompany = () => {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const user = request.user;
+      if (!user) {
+        throw new Error("Veuillez utiliser requireAuth avant");
+      }
+      if (!user.companyId) {
+        throw new Error("Vous ne faites pas partie d'une entreprise");
+      }
+    } catch (error) {
+      reply.status(403).send({
+        message: error instanceof Error ? error.message : "Non autorisé",
+      });
+    }
+  };
+};
