@@ -55,6 +55,9 @@ export const requireToBePartOfCompany = () => {
       if (!user) {
         throw new Error("Veuillez utiliser requireAuth avant");
       }
+      if (user.roles.includes("admin")) {
+        return;
+      }
       if (!user.companyId) {
         throw new Error("Vous ne faites pas partie d'une entreprise");
       }
